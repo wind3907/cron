@@ -6,7 +6,7 @@ properties(
                 string(name: 'PLANET', defaultValue: 'Earth'),
                 string(name: 'GREETING', defaultValue: 'Hello'),
             ]
-        )
+        ),
         triggers(
             parameterizedCron('''
             */2 * * * * %GREETING=Hola;PLANET=Pluto
