@@ -1,3 +1,7 @@
+def data = '''
+            */2 * * * * %GREETING=Hola;PLANET=Pluto
+            */3 * * * * %PLANET=Mars
+        '''
 properties(
     [
         buildDiscarder(logRotator(numToKeepStr: '20')),
@@ -15,10 +19,7 @@ pipeline {
         TEST="${params.TEST}"
     }
     triggers {
-        parameterizedCron('''
-            */2 * * * * %GREETING=Hola;PLANET=Pluto
-            */3 * * * * %PLANET=Mars
-        ''')
+        parameterizedCron(data)
     }
     stages {
         stage('Checkout SCM') {
