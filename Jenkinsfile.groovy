@@ -1,7 +1,7 @@
 def data = '''
-            */2 * * * * %GREETING=Hola;PLANET=Pluto
-            */3 * * * * %PLANET=Mars
+            50 * * * * %GREETING=Hola;PLANET=Pluto
         '''
+def workspace = "${WORKSPACE}"
 properties(
     [
         buildDiscarder(logRotator(numToKeepStr: '20')),
@@ -33,6 +33,7 @@ pipeline {
             steps {
                 echo "${params.PLANET}"
                 echo "${params.GREETING}"
+                echo "${workspace}"
             }
         }
     }
