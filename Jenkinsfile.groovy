@@ -1,8 +1,23 @@
+properties(
+    [
+        buildDiscarder(logRotator(numToKeepStr: '20')),
+        parameters(
+            [
+                string(name: 'PLANET', defaultValue: 'Earth'),
+                string(name: 'GREETING', defaultValue: 'Hello'),
+            ]
+        )
+        triggers(
+            parameterizedCron('''
+            */2 * * * * %GREETING=Hola;PLANET=Pluto
+            */3 * * * * %PLANET=Mars
+            */5 * * * *
+        ''')
+        )
+    ]
+)
 pipeline {
     agent { label 'master' }
-    parameters {
-        string(name: 'TEST', defaultValue: '001')
-    }
     environment {
         TEST="${params.TEST}"
     }
@@ -12,6 +27,12 @@ pipeline {
                 cleanWs()
                 checkout scm
                 echo "Building ${env.JOB_NAME}..."
+            }
+        }
+        stage('Info') {
+            steps {
+                echo "${params.PLANET}"
+                echo "${params.GREETING}"
             }
         }
     }
