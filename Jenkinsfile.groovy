@@ -7,19 +7,18 @@ properties(
                 string(name: 'GREETING', defaultValue: 'Hello'),
             ]
         ),
-        triggers(
-            parameterizedCron('''
-            */2 * * * * %GREETING=Hola;PLANET=Pluto
-            */3 * * * * %PLANET=Mars
-            */5 * * * *
-        ''')
-        )
     ]
 )
 pipeline {
     agent { label 'master' }
     environment {
         TEST="${params.TEST}"
+    }
+    triggers {
+        parameterizedCron('''
+            */2 * * * * %GREETING=Hola;PLANET=Pluto
+            */3 * * * * %PLANET=Mars
+        ''')
     }
     stages {
         stage('Checkout SCM') {
