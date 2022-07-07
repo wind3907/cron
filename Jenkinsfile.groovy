@@ -2,15 +2,14 @@
 node {
     checkout scm
     env.WORKSPACE = pwd()
-    def emailList = readFile "${WORKSPACE}/email_recipients.txt"
-    sh "echo ${emailList}"
+    def schedule = readFile "${WORKSPACE}/data_migration_schedule.txt"
 }
 
 pipeline {
     agent { label 'master' }
-    // triggers {
-    //     parameterizedCron(schedule)
-    // }
+    triggers {
+        parameterizedCron(schedule)
+    }
     stages {
         stage('Test') {
             steps {
