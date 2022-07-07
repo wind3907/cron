@@ -1,2 +1,2 @@
-*/2 * * * * %GREETING=Hola;PLANET=Pluto
-*/3 * * * * %PLANET=Mars
+* */2 * * * %SOURCE_DB=rs036e;TARGET_DB=lx036trn
+* */3 * * * %SOURCE_DB=rs048e;TARGET_DB=lx048trn
