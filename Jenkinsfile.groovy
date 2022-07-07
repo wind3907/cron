@@ -113,9 +113,7 @@ pipeline {
         }
         stage('Triiger') {
             when {
-                expression { 
-                    TRIGGER == true
-                }
+                TRIGGER == true
             }
             steps {
                 script{
