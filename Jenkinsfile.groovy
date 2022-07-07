@@ -1,8 +1,7 @@
 
-// checkout scm
-// env.WORKSPACE = pwd()
-// def schedule = readFile "${env.WORKSPACE}/data_migration_schedule.groovy"
-// sh "cat ${schedule}"
+checkout scm
+env.WORKSPACE = pwd()
+sh "echo ${WORKSPACE}"
 
 properties(
     [
@@ -88,11 +87,9 @@ pipeline {
     //     parameterizedCron(schedule)
     // }
     stages {
-        stage('Checkout SCM') {
+        stage('Test') {
             steps {
-                cleanWs()
-                checkout scm
-                echo "Building ${env.JOB_NAME}..."
+                echo 'hi'
             }
         }
         // stage("SWMS Data Migration") {
