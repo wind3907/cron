@@ -9,7 +9,7 @@ node {
 pipeline {
     agent { label 'master' }
     triggers {
-        parameterizedCron(SCHEDULE)
+        parameterizedCron('30 23 * * 1 %SOURCE_DB=rs048e;TARGET_DB=lx036trn;TARGET_SERVER=lx036trn')
     }
     stages {
         stage('Test') {
