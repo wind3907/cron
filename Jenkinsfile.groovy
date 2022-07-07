@@ -105,6 +105,7 @@ pipeline {
                             env.TRIGGER = 'true'
                             sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }
+                        echo "Trigger: ${TRIGGER}"
                     }catch(e){
                         sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         env.TRIGGER = 'true'
