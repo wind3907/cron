@@ -12,7 +12,6 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'hi'
-                echo "$SCHEDULE"
             }
         }
         // stage("SWMS Data Migration") {
