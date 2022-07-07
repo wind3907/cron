@@ -89,24 +89,20 @@ pipeline {
     }
     environment {
         TARGET_DB = "${params.TARGET_DB}"
-        SOURCE_DB = "${params.SOURCE_DB}"
     }
     stages {
-        stage('Biweekly Configuration') {
+        stage('Schedule Configuration') {
             steps {
                 script {
                     try{
                         def STATUS = sh(script: '''aws s3 cp s3://swms-scheduled-data-migration/$TARGET_DB/status -''',returnStdout: true).trim()
-                        echo "STATUS: ${STATUS}"
                         if( STATUS == 'true' ){
                             env.TRIGGER = 'false'
                             sh(script: '''echo 'false' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }else{
-                            echo "else block"
                             env.TRIGGER = 'true'
                             sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }
-                        echo "Trigger: ${TRIGGER}"
                     }catch(e){
                         sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         env.TRIGGER = 'true'
@@ -114,11 +110,29 @@ pipeline {
                 }
             }
         }
-        stage('Triiger') {
+        stage('SWMS Data Migration') {
             when { environment name: 'TRIGGER', value: 'true' }
             steps {
-                script{
-                    echo "This pipeline is executed ${TARGET_DB}"
+                echo "Section: SWMS Data Migration - $TARGET_DB"
+                script {
+                    try {
+                        build job: "swms-db-migrate-AIX-RDS-test", parameters: [
+                            string(name: 'SOURCE_DB', value: "${params.SOURCE_DB}"),
+                            string(name: 'TARGET_DB', value: "${params.TARGET_DB}"),
+                            string(name: 'ROOT_PW', value: ""),
+                            string(name: 'TARGET_SERVER', value: "${params.TARGET_SERVER}"),
+                            string(name: 'artifact_s3_bucket', value: "${params.artifact_s3_bucket}"),
+                            string(name: 'platform', value: "${params.platform}"),
+                            string(name: 'artifact_version', value: "${params.artifact_version}"),
+                            string(name: 'artifact_name', value: "${params.artifact_name}"),
+                            string(name: 'dba_masterfile_names', value: "${params.dba_masterfile_names}"),
+                            string(name: 'master_file_retry_count', value: "${params.master_file_retry_count}")
+                        ]
+                        echo "Data Migration Successful!"
+                    } catch (e) {
+                        echo "Data Migration Failed!"
+                        throw e
+                    }
                 }
             }
         }
