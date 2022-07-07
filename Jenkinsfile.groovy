@@ -119,7 +119,7 @@ pipeline {
             }
             steps {
                 script{
-                    echo "This pipeline is executed ${TARGET_SERVER}"
+                    echo "This pipeline is executed ${TARGET_DB}"
                 }
             }
         }
