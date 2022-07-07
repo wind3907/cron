@@ -1,3 +1,9 @@
+node {
+    checkout scm
+    env.WORKSPACE = pwd()
+    env.SCHEDULE = readFile "${WORKSPACE}/data_migration_schedule.txt"
+}
+
 pipeline {
     agent any
     parameters {
@@ -5,12 +11,7 @@ pipeline {
       string(name: 'GREETING', defaultValue: 'Hello', description: 'How shall we greet?')
     }
     triggers {
-        parameterizedCron('''
-            # leave spaces where you want them around the parameters. They'll be trimmed.
-            # we let the build run with the default name
-            */2 * * * * %GREETING=Hola;PLANET=Pluto
-            */3 * * * * %PLANET=Mars
-        ''')
+        parameterizedCron(SCHEDULE)
     }
     stages {
         stage('Example') {
