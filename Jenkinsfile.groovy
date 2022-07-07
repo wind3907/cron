@@ -1,8 +1,8 @@
 
-checkout scm
-env.WORKSPACE = pwd()
-def schedule = readFile "${env.WORKSPACE}/data_migration_schedule.groovy"
-sh "cat ${schedule}"
+// checkout scm
+// env.WORKSPACE = pwd()
+// def schedule = readFile "${env.WORKSPACE}/data_migration_schedule.groovy"
+// sh "cat ${schedule}"
 
 properties(
     [
