@@ -8,9 +8,9 @@ node {
 
 pipeline {
     agent { label 'master' }
-    // triggers {
-    //     parameterizedCron(schedule)
-    // }
+    triggers {
+        parameterizedCron('''$SCHEDULE''')
+    }
     stages {
         stage('Test') {
             steps {
