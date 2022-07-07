@@ -105,7 +105,8 @@ pipeline {
                             sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }
                     }catch(e){
-                        echo "Something is wrong"
+                        sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
+                        env.TRIGGER = true
                     }
                 }
             }
@@ -113,7 +114,7 @@ pipeline {
         stage('Triiger') {
             when {
                 expression { 
-                    TRIGGER = true
+                    TRIGGER == true
                 }
             }
             steps {
