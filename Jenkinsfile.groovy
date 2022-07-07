@@ -95,21 +95,15 @@ pipeline {
         stage('Biweekly Configuration') {
             steps {
                 script {
-                    try{
-                        def STATUS = sh(script: '''aws s3 cp s3://swms-scheduled-data-migration/$TARGET_DB/status -''',returnStdout: true)
-                        echo "STATUS: ${STATUS}"
-                        if( STATUS == 'true'){
-                            env.TRIGGER = 'false'
-                            sh(script: '''echo 'false' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
-                        }else{
-                            echo "else block"
-                            env.TRIGGER = 'true'
-                            sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
-                        }
-                        echo "Trigger: ${TRIGGER}"
-                    }catch(e){
-                        sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
+                    def STATUS = true
+                    echo "STATUS: ${STATUS}"
+                    if( STATUS == true ){
+                        env.TRIGGER = 'false'
+                        sh(script: '''echo 'false' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
+                    }else{
+                        echo "else block"
                         env.TRIGGER = 'true'
+                        sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                     }
                 }
             }
