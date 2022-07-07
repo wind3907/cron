@@ -8,13 +8,14 @@ node {
 
 pipeline {
     agent { label 'master' }
-    triggers {
-        parameterizedCron('''$SCHEDULE''')
-    }
+    // triggers {
+    //     parameterizedCron(SCHEDULE)
+    // }
     stages {
         stage('Test') {
             steps {
                 echo 'hi'
+                echo "$SCHEDULE"
             }
         }
         // stage("SWMS Data Migration") {
