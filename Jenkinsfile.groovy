@@ -96,9 +96,9 @@ pipeline {
             steps {
                 script {
                     try{
-                        status = sh(script: '''aws s3 cp s3://swms-scheduled-data-migration/$TARGET_DB/status -''',returnStdout: true)
+                        env.STATUS = sh(script: '''aws s3 cp s3://swms-scheduled-data-migration/$TARGET_DB/status -''',returnStdout: true)
                         echo "${status}" 
-                        if(status == 'true'){
+                        if(STATUS == 'true'){
                             env.TRIGGER = 'false'
                             sh(script: '''echo 'false' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }else{
