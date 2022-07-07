@@ -98,23 +98,21 @@ pipeline {
                     try{
                         status = sh(script: '''aws s3 cp s3://swms-scheduled-data-migration/$TARGET_DB/status -''',returnStdout: true) 
                         if(status == 'true'){
-                            env.TRIGGER = false
+                            env.TRIGGER = 'false'
                             sh(script: '''echo 'false' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }else{
-                            env.TRIGGER = true
+                            env.TRIGGER = 'true'
                             sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }
                     }catch(e){
                         sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
-                        env.TRIGGER = true
+                        env.TRIGGER = 'true'
                     }
                 }
             }
         }
         stage('Triiger') {
-            when {
-                TRIGGER == true
-            }
+            when { environment name: 'TRIGGER', value: 'true' }
             steps {
                 script{
                     echo "This pipeline is executed ${TARGET_DB}"
