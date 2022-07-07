@@ -2,8 +2,8 @@
 node {
     checkout scm
     env.WORKSPACE = pwd()
-    def config = readFile "${WORKSPACE}/email_recipients.txt"
-    sh "cat ${config}"
+    def emailList = readFile "${WORKSPACE}/email_recipients.txt"
+    sh "echo ${emailList}"
 }
 
 pipeline {
