@@ -96,13 +96,13 @@ pipeline {
             steps {
                 script {
                     try{
-                        status = sh(script: '''aws s3 cp s3://swms-scheduled-data-migration/$TARGET_SERVER/status -''',returnStdout: true) 
+                        status = sh(script: '''aws s3 cp s3://swms-scheduled-data-migration/$TARGET_DB/status -''',returnStdout: true) 
                         if(status == 'true'){
                             env.TRIGGER = false
-                            sh(script: '''echo 'false' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_SERVER}/status''')
+                            sh(script: '''echo 'false' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }else{
                             env.TRIGGER = true
-                            sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_SERVER}/status''')
+                            sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_DB}/status''')
                         }
                     }catch(e){
                         echo "Something is wrong"
@@ -117,7 +117,9 @@ pipeline {
                 }
             }
             steps {
-                echo 'This pipeline is executed'
+                script{
+                    echo "This pipeline is executed ${TARGET_SERVER}"
+                }
             }
         }
     }
