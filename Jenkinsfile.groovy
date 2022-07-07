@@ -1,11 +1,3 @@
-
-node {
-    checkout scm
-    env.WORKSPACE = pwd()
-    env.SCHEDULE = readFile "${WORKSPACE}/data_migration_schedule.txt"
-    echo "$SCHEDULE"
-}
-
 pipeline {
     agent { label 'master' }
     triggers {
