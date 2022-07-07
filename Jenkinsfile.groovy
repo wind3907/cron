@@ -87,11 +87,37 @@ pipeline {
     triggers {
         parameterizedCron(SCHEDULE)
     }
+    environment {
+        TARGET_DB = "${params.TARGET_DB}"
+        SOURCE_DB = "${params.SOURCE_DB}"
+    }
     stages {
-        stage('Example') {
+        stage('Biweekly Configuration') {
             steps {
-                echo "${params.SOURCE_DB} ${params.TARGET_DB}"
-                script { currentBuild.description = "${params.SOURCE_DB} ${params.TARGET_DB}" }
+                script {
+                    try{
+                        status = sh(script: '''aws s3 cp s3://swms-scheduled-data-migration/$TARGET_SERVER/status -''',returnStdout: true) 
+                        if(status == 'true'){
+                            env.TRIGGER = false
+                            sh(script: '''echo 'false' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_SERVER}/status''')
+                        }else{
+                            env.TRIGGER = true
+                            sh(script: '''echo 'true' | aws s3 cp - s3://swms-scheduled-data-migration/${TARGET_SERVER}/status''')
+                        }
+                    }catch(e){
+                        echo "Something is wrong"
+                    }
+                }
+            }
+        }
+        stage('Triiger') {
+            when {
+                expression { 
+                    TRIGGER = true
+                }
+            }
+            steps {
+                echo 'This pipeline is executed'
             }
         }
     }
